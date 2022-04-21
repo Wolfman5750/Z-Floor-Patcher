@@ -1,0 +1,8 @@
+{
+  "Nickname": "Z-Floor Patcher",
+  "Visibility": "IncludeButHide",
+  "OneLineDescription": "ZFloorPatcher",
+  "LongDescription": "ZFloorPatcher",
+  "PreferredAutoVersioning": "LatestTag",
+  "RequiredMods": []
+}
