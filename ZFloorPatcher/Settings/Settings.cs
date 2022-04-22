@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ICAIO_AI_FOR_MOD_NPCs.Settings
+namespace z_FloorPatcher.Settings
 {
     class Settings
     {

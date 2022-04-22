@@ -8,7 +8,6 @@ using Mutagen.Bethesda.Synthesis;
 using Mutagen.Bethesda.FormKeys.SkyrimSE;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
-//using ICAIO_AI_FOR_MOD_NPCs.Utilities;
 using Noggog;
 
 namespace z_FloorPatcher
@@ -19,7 +18,7 @@ namespace z_FloorPatcher
         {
             return await SynthesisPipeline.Instance
                 .AddPatch<ISkyrimMod, ISkyrimModGetter>(RunPatch)
-                .SetTypicalOpen(GameRelease.SkyrimSE, "ICAIO_AI_MOD_NPCs.esp")
+                .SetTypicalOpen(GameRelease.SkyrimSE, "ZFloorPatcher.esp")
                 .Run(args);
         }
 
@@ -27,7 +26,7 @@ namespace z_FloorPatcher
         {
 
 
-            HashSet<ModKey> vanilla = Implicits.Get(GameRelease.SkyrimSE).BaseMasters.ToHashSet();
+            //HashSet<ModKey> vanilla = Implicits.Get(GameRelease.SkyrimSE).BaseMasters.ToHashSet();
 
             Console.WriteLine($"Iterating through placed objects ...");
 
@@ -84,11 +83,13 @@ namespace z_FloorPatcher
             //    }
             //}
 
-            foreach (var NAVContext in state.LoadOrder.PriorityOrder.ANavigationMesh().WinningContextOverrides(state.LinkCache))
+            foreach (var NAVContext in state.LoadOrder.PriorityOrder.NavigationMesh().WinningContextOverrides(state.LinkCache))
             {
                 bool NavTooLow = false;
+                int VertCount = 0;
                 foreach (var NavVertex in NAVContext.Record.Data.Vertices)
                 {
+                    VertCount++;
                     
                     if (NavVertex.Z < -30000)
                     {
@@ -105,8 +106,8 @@ namespace z_FloorPatcher
                 {
                     NavCount++;
                     var ModNav = NAVContext.GetOrAddAsOverride(state.PatchMod);
-                    
-                    for (int i = 0; i < ModNav.Data.Vertices.Count; i++)
+
+                    for (int i = 0; i < VertCount; i++)
                     {
                         var pt = ModNav.Data.Vertices[i];
                         if (pt.Z < -30000)
@@ -117,14 +118,38 @@ namespace z_FloorPatcher
                         }
                     }
 
+                    //if (ModNav is ICellNavigationMesh cellMesh)
+                    //{
+                    //    UpdateModNav(cellMesh, VertCount);
+                    //}
+                    //else if (ModNav is IWorldspaceNavigationMesh worldNav)
+                    //{
+                    //    UpdateModNav(worldNav, VertCount);
+                    //}
+
                 }
             }
 
             Console.WriteLine($"Found {ObjCount} objects below bounds and {NavCount} navmeshes below bounds ");
 
         }
-        
-       
+
+     //   public static void UpdateModNav<T>(T item, int Count )
+     //where T : IANavigationMesh
+     //   {
+     //       for (int i = 0; i < Count; i++)
+     //       {
+     //           var pt = item.Data.Vertices[i];
+     //           if (pt.Z < -30000)
+     //           {
+     //               P3Float P3 = new P3Float(pt.X, pt.Y, -30000);
+     //               item.Data.Vertices[i] = P3;
+     //           }
+     //       }
+     //   }
 
     }
+
+
+
 }
