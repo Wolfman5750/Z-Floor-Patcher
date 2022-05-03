@@ -26,7 +26,6 @@ namespace z_FloorPatcher
         {
 
 
-            //HashSet<ModKey> vanilla = Implicits.Get(GameRelease.SkyrimSE).BaseMasters.ToHashSet();
 
             Console.WriteLine($"Iterating through placed objects ...");
 
@@ -56,36 +55,33 @@ namespace z_FloorPatcher
 
 
                 }
+                else if (OBJContext.Record.Placement.Position.Z > 30000.0)
+                {
+                    Console.WriteLine($"Found Object out of bounds {OBJContext.Record.EditorID} Z: {OBJContext.Record.Placement.Position.Z}");
+                    ObjCount++;
+
+
+                    IPlacedObject ModObj = OBJContext.GetOrAddAsOverride(state.PatchMod);
+
+                    P3Float P3 = new P3Float(OBJContext.Record.Placement.Position.X, OBJContext.Record.Placement.Position.Y, 30000);
+
+
+
+
+                    ModObj.Placement.Position = P3;
+
+
+
+
+                }
 
             }
-
-            //foreach (var NAVContext in state.LoadOrder.PriorityOrder.CellNavigationMesh().WinningContextOverrides(state.LinkCache))
-            //{
-            //    foreach (var NavVertex in NAVContext.Record.Data.Vertices)
-            //    {
-            //        if (NavVertex.Z < -30000)
-            //        {
-            //            IANavigationMeshGetter ModNav = NAVContext.GetOrAddAsOverride(state.PatchMod);
-            //            continue;
-            //        }
-            //    }
-            //}
-
-            //foreach (var NAVContext in state.LoadOrder.PriorityOrder.WorldspaceNavigationMesh().WinningContextOverrides(state.LinkCache))
-            //{
-            //    foreach (var NavVertex in NAVContext.Record.Data.Vertices)
-            //    {
-            //        if (NavVertex.Z < -30000)
-            //        {
-            //            IANavigationMeshGetter ModNav = NAVContext.GetOrAddAsOverride(state.PatchMod);
-            //            continue;
-            //        }
-            //    }
-            //}
 
             foreach (var NAVContext in state.LoadOrder.PriorityOrder.NavigationMesh().WinningContextOverrides(state.LinkCache))
             {
                 bool NavTooLow = false;
+                bool NavTooHigh = false;
+
                 int VertCount = 0;
                 foreach (var NavVertex in NAVContext.Record.Data.Vertices)
                 {
@@ -98,8 +94,15 @@ namespace z_FloorPatcher
                         continue;
                                                 
                     }
+                    else if (NavVertex.Z > 30000)
+                    {
+                        NavTooHigh = true;
+                        Console.WriteLine($"Found Navmesh out of bounds: {NAVContext.Record.FormKey} Z: {NavVertex.Z}");
+                        continue;
 
-                   
+                    }
+
+
                 } 
                 
                 if (NavTooLow == true)
@@ -118,35 +121,35 @@ namespace z_FloorPatcher
                         }
                     }
 
-                    //if (ModNav is ICellNavigationMesh cellMesh)
-                    //{
-                    //    UpdateModNav(cellMesh, VertCount);
-                    //}
-                    //else if (ModNav is IWorldspaceNavigationMesh worldNav)
-                    //{
-                    //    UpdateModNav(worldNav, VertCount);
-                    //}
+
+
+                }
+                else if (NavTooHigh == true)
+                {
+                    NavCount++;
+                    var ModNav = NAVContext.GetOrAddAsOverride(state.PatchMod);
+
+                    for (int i = 0; i < VertCount; i++)
+                    {
+                        var pt = ModNav.Data.Vertices[i];
+                        if (pt.Z > 30000)
+                        {
+                            P3Float P3 = new P3Float(pt.X, pt.Y, 30000);
+
+                            ModNav.Data.Vertices[i] = P3;
+                        }
+                    }
+
+
 
                 }
             }
 
-            Console.WriteLine($"Found {ObjCount} objects below bounds and {NavCount} navmeshes below bounds ");
+            Console.WriteLine($"Found {ObjCount} objects below bounds and {NavCount} navmeshes outside of bounds ");
 
         }
 
-     //   public static void UpdateModNav<T>(T item, int Count )
-     //where T : IANavigationMesh
-     //   {
-     //       for (int i = 0; i < Count; i++)
-     //       {
-     //           var pt = item.Data.Vertices[i];
-     //           if (pt.Z < -30000)
-     //           {
-     //               P3Float P3 = new P3Float(pt.X, pt.Y, -30000);
-     //               item.Data.Vertices[i] = P3;
-     //           }
-     //       }
-     //   }
+
 
     }
 
