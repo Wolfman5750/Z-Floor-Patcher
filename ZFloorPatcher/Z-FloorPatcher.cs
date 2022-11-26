@@ -31,8 +31,9 @@ namespace z_FloorPatcher
 
             foreach (var OBJContext in state.LoadOrder.PriorityOrder.PlacedObject().WinningContextOverrides(state.LinkCache))
             {
+                if (OBJContext.Record.Placement == null) continue;
                 //Console.WriteLine($"Obj: {OBJContext.Record.EditorID} Z: {OBJContext.Record.Placement.Position.Z}");
-                    
+                
                 if (OBJContext.Record.Placement.Position.Z < -30000.0)
                 {
                     Console.WriteLine($"Found Object out of bounds {OBJContext.Record.EditorID} Z: {OBJContext.Record.Placement.Position.Z}");
@@ -43,7 +44,8 @@ namespace z_FloorPatcher
 
                     P3Float P3 = new P3Float(OBJContext.Record.Placement.Position.X, OBJContext.Record.Placement.Position.Y, -30000);
                     
-                    ModObj.Placement.Position=P3;
+                    ModObj.Placement ??= new();
+                    ModObj.Placement.Position = P3;
                 }
                 //else if (OBJContext.Record.Placement.Position.Z > 30000.0)
                 //{
@@ -57,6 +59,8 @@ namespace z_FloorPatcher
 
             foreach (var NAVContext in state.LoadOrder.PriorityOrder.NavigationMesh().WinningContextOverrides(state.LinkCache))
             {
+                if (NAVContext.Record.Data == null) continue;
+                
                 bool NavTooLow = false;
                 //bool NavTooHigh = false;
 
@@ -88,6 +92,8 @@ namespace z_FloorPatcher
 
                     for (int i = 0; i < VertCount; i++)
                     {
+                        ModNav.Data ??= new();
+                        
                         var pt = ModNav.Data.Vertices[i];
                         if (pt.Z < -30000)
                         {
