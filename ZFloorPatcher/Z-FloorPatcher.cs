@@ -24,9 +24,6 @@ namespace z_FloorPatcher
 
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
-
-
-
             Console.WriteLine($"Iterating through placed objects ...");
 
             int ObjCount = 0;
@@ -45,36 +42,17 @@ namespace z_FloorPatcher
                     IPlacedObject ModObj = OBJContext.GetOrAddAsOverride(state.PatchMod);
 
                     P3Float P3 = new P3Float(OBJContext.Record.Placement.Position.X, OBJContext.Record.Placement.Position.Y, -30000);
-                                 
-                                       
-
                     
                     ModObj.Placement.Position=P3;
-
-
-
-
                 }
                 //else if (OBJContext.Record.Placement.Position.Z > 30000.0)
                 //{
                 //    Console.WriteLine($"Found Object out of bounds {OBJContext.Record.EditorID} Z: {OBJContext.Record.Placement.Position.Z}");
                 //    ObjCount++;
-
-
                 //    IPlacedObject ModObj = OBJContext.GetOrAddAsOverride(state.PatchMod);
-
                 //    P3Float P3 = new P3Float(OBJContext.Record.Placement.Position.X, OBJContext.Record.Placement.Position.Y, 30000);
-
-
-
-
                 //    ModObj.Placement.Position = P3;
-
-
-
-
                 //}
-
             }
 
             foreach (var NAVContext in state.LoadOrder.PriorityOrder.NavigationMesh().WinningContextOverrides(state.LinkCache))
@@ -101,8 +79,6 @@ namespace z_FloorPatcher
                     //    continue;
 
                     //}
-
-
                 } 
                 
                 if (NavTooLow == true)
@@ -120,39 +96,24 @@ namespace z_FloorPatcher
                             ModNav.Data.Vertices[i] = P3;
                         }
                     }
-
-
-
                 }
                 //else if (NavTooHigh == true)
                 //{
                 //    NavCount++;
                 //    var ModNav = NAVContext.GetOrAddAsOverride(state.PatchMod);
-
                 //    for (int i = 0; i < VertCount; i++)
                 //    {
                 //        var pt = ModNav.Data.Vertices[i];
                 //        if (pt.Z > 30000)
                 //        {
                 //            P3Float P3 = new P3Float(pt.X, pt.Y, 30000);
-
                 //            ModNav.Data.Vertices[i] = P3;
                 //        }
                 //    }
-
-
-
                 //}
             }
 
             Console.WriteLine($"Found {ObjCount} objects below bounds and {NavCount} navmeshes outside of bounds ");
-
         }
-
-
-
     }
-
-
-
 }
