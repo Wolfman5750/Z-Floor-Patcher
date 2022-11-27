@@ -4,13 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <Authors>Wolfman5750</Authors>
-    <Platforms>AnyCPU;x86;x64</Platforms>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mutagen.Bethesda" Version="0.37.0-pr007" />
-    <PackageReference Include="Mutagen.Bethesda.FormKeys.SkyrimSE" Version="2.1.0" />
-    <PackageReference Include="Mutagen.Bethesda.Synthesis" Version="0.23.0-pr001" />
+    <PackageReference Include="Mutagen.Bethesda" Version="0.39.6" />
+    <PackageReference Include="Mutagen.Bethesda.FormKeys.SkyrimSE" Version="3.0.0" />
+    <PackageReference Include="Mutagen.Bethesda.Synthesis" Version="0.24.1" />
   </ItemGroup>
 
 </Project>
